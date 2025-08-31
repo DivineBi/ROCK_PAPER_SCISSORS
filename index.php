@@ -1,3 +1,7 @@
+
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,7 +10,13 @@
 </head>
 <body>
 <div class="container">
-<h1>Welcome to Broken Rock Paper Scissors</h1>
+<h1>Welcome to Rock Paper Scissors</h1>
+<?php
+if (isset($_SESSION['error'])) {
+    echo '<p style="color:red">'.htmlentities($_SESSION['error'])."</p>\n";
+    unset($_SESSION['error']);
+}
+?>
 <p><strong>Note:</strong> This sample code is only
 partially done and serves only as a starting point for the assignment.
 </p>

@@ -1,5 +1,13 @@
 <?php
 
+// Session check to enforce that users cannot play without logging in
+session_start();
+if (!isset($_SESSION['name'])) {
+    $_SESSION['error'] = "You must log in first";
+    header("Location: index.php");
+    return;
+}
+
 // Demand a GET parameter
 if ( ! isset($_GET['name']) || strlen($_GET['name']) < 1  ) {
     die('Name parameter missing');
