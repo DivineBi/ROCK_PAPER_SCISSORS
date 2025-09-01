@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ( $check == $stored_hash ) {
             $_SESSION['name'] = $_POST['who'];
             // Redirect the browser to game.php
-            header("Location: game.php?name=".urlencode($_POST['who']));
+            header("Location: game.php");
             return;
         } else {
             $_SESSION['error'] = 'Incorrect password';
@@ -54,6 +54,12 @@ if (isset($_SESSION['error'])) {
 <input type="password" name="pass" id="pass"><br/>
 <input type="submit" value="Log In">
 </form>
+<p>
+For a password hint, view source and find a password hint
+in the HTML comments.
+<!-- Hint: The password is the four character sound a cat
+makes (all lower case) followed by 123. -->
+</p>
 </div>
 </body>
 </html>

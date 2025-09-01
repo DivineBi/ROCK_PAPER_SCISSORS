@@ -1,20 +1,14 @@
 <?php
-
-// Session check to enforce that users cannot play without logging in
 session_start();
+
+// If the user's name is not set in the session, stop with an error
 if (!isset($_SESSION['name'])) {
-    $_SESSION['error'] = "You must log in first";
-    header("Location: index.php");
-    return;
+    die("Name parameter missing");
 }
 
-// Demand a GET parameter
-if ( ! isset($_GET['name']) || strlen($_GET['name']) < 1  ) {
-    die('Name parameter missing');
-}
-
-// If the user requested logout go back to index.php
-if ( isset($_POST['logout']) ) {
+// If the user requested logout, go back to index.php
+if (isset($_POST['logout'])) {
+    session_destroy();
     header('Location: index.php');
     return;
 }
@@ -24,9 +18,8 @@ if ( isset($_POST['logout']) ) {
 $names = array('Rock', 'Paper', 'Scissors');
 $human = isset($_POST["human"]) ? $_POST['human']+0 : -1;
 
-$computer = 0; // Hard code the computer to rock
-// TODO: Make the computer be random
-// $computer = rand(0,2);
+// Computer makes a random play (0, 1, 2)
+$computer = rand(0,2); 
 
 // This function takes as its input the computer and human play
 // and returns "Tie", "You Lose", "You Win" depending on play
@@ -34,11 +27,13 @@ $computer = 0; // Hard code the computer to rock
 function check($computer, $human) {
     // For now this is a rock-savant checking function
     // TODO: Fix this
-    if ( $human == 0 ) {
+    if ($human == $computer) {
         return "Tie";
-    } else if ( $human == 1 ) {
+    } else if (($human == 0 && $computer == 2) ||
+               ($human == 1 && $computer == 0) ||
+               ($human == 2 && $computer == 1) ) {
         return "You Win";
-    } else if ( $human == 2 ) {
+    } else if ($human >= 0 && $human <= 2) {
         return "You Lose";
     }
     return false;
@@ -51,18 +46,16 @@ $result = check($computer, $human);
 <!DOCTYPE html>
 <html>
 <head>
-<title>Dr. Chuck's Rock, Paper, Scissors Game</title>
+<title>Rock, Paper, Scissors Game</title>
 <?php require_once "bootstrap.php"; ?>
 </head>
 <body>
 <div class="container">
 <h1>Rock Paper Scissors</h1>
 <?php
-if ( isset($_REQUEST['name']) ) {
     echo "<p>Welcome: ";
-    echo htmlentities($_REQUEST['name']);
+    echo htmlentities($_SESSION['name']);
     echo "</p>\n";
-}
 ?>
 <form method="post">
 <select name="human">
@@ -87,7 +80,7 @@ if ( $human == -1 ) {
             print "Human=$names[$h] Computer=$names[$c] Result=$r\n";
         }
     }
-} else {
+} else if ($human >= 0 && $human <=2){
     print "Your Play=$names[$human] Computer Play=$names[$computer] Result=$result\n";
 }
 ?>
